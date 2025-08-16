@@ -1,0 +1,3 @@
+FROM openjdk:23-jdk
+COPY target/ms-ordonnance-mongo*.jar ms-ordonnance-mongo.jar
+CMD java -jar /ms-ordonnance-mongo.jar

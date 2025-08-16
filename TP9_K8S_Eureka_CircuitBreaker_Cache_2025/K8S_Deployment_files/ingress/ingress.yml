@@ -1,0 +1,35 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: path-based-ingress
+  annotations:
+    kubernetes.io/ingress.class: nginx
+    nginx.ingress.kubernetes.io/rewrite-target: /$1
+    nginx.ingress.kubernetes.io/use-regex: "true"
+spec:
+  rules:
+  - http:
+      paths:
+      - path: /service-patient/(.+)
+        pathType: Prefix
+        backend:
+          service:
+            name: ms-patient
+            port:
+              number: 8081
+              
+      - path: /service-ordonnance/(.+)
+        pathType: Prefix
+        backend:
+          service:
+            name: ms-ordonnance
+            port:
+              number: 8082
+
+      - path: /service-remboursement/(.+)
+        pathType: Prefix
+        backend:
+          service:
+            name: ms-remboursement
+            port:
+              number: 8083        

@@ -1,0 +1,3 @@
+FROM openjdk:23-jdk
+COPY target/ms-remboursement*.jar ms-remboursement.jar
+CMD java -jar /ms-remboursement.jar

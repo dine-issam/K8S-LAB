@@ -1,0 +1,10 @@
+version: "3.8"
+services:
+  mongodb-esisba:
+     image : mongo
+     container_name:  mongo-bdd
+
+     ports:
+          - 27017:27017
+     restart: unless-stopped
+

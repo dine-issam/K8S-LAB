@@ -1,0 +1,3 @@
+FROM openjdk:23-jdk
+COPY target/ms-ordonnance*.jar ms-ordonnance.jar
+CMD java -jar /ms-ordonnance.jar

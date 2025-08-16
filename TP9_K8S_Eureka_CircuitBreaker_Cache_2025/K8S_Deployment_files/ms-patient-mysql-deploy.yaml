@@ -1,0 +1,55 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ms-patient-mysql-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: ms-patient-mysql-pod
+  template:
+    metadata:
+      labels:
+        app: ms-patient-mysql-pod
+    spec:
+      containers:
+        - name: ms-patient-mysql-container
+          image: 192.168.3.1:5000/ms-patient-mysql-image
+          ports:
+            - containerPort: 8085
+          env:
+           - name: eureka.client.serviceUrl.defaultZone
+             value:  http://registry-srv:8888/eureka  
+           - name: spring.application.instance_id
+             valueFrom:
+                fieldRef:
+                  fieldPath: metadata.name
+           - name: eureka.instance.preferIpAddress
+             value: "false"  
+           - name: eureka.instance.hostname
+             value: ms-patient-mysql 
+
+           - name: SPRING_DATASOURCE_URL
+             value: jdbc:mysql://mysql-srv:3306/bdd-patient
+           - name: SPRING_DATASOURCE_USERNAME
+             value: root
+           - name: SPRING_DATASOURCE_PASSWORD
+             value: root   
+               
+          imagePullPolicy: Always     
+          
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: ms-patient-mysql
+spec:
+  selector:
+    app: ms-patient-mysql-pod
+  ports:
+    - port: 8085
+      targetPort: 8085
+      nodePort: 30012
+  type: NodePort       
+      
+  

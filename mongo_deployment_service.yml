@@ -1,0 +1,42 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mongo-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: mongo-pod
+  template:
+    metadata:
+      labels:
+        app: mongo-pod
+    spec:
+      containers:
+        - image: mongo:4.4
+          name: mongo-container
+          ports:
+            - containerPort: 27017
+          volumeMounts:
+            - name: mongo-persistent-storage
+              mountPath: /data/db
+      volumes:
+        - name: mongo-persistent-storage
+          persistentVolumeClaim:
+            claimName: mongo-pv-claim  # Reference the PVC name
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: mongo-service
+spec:
+  ports:
+    - port: 27017
+      targetPort: 27017
+      nodePort: 30007
+      
+  selector:
+    app: mongo-pod
+    
+  type: NodePort

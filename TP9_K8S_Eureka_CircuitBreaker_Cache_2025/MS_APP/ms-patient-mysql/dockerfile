@@ -1,0 +1,3 @@
+FROM openjdk:23-jdk
+COPY target/ms-patient-mysql*.jar ms-patient-mysql.jar
+CMD java -jar /ms-patient-mysql.jar

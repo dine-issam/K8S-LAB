@@ -1,0 +1,48 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ms-patient-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: ms-patient-pod
+  template:
+    metadata:
+      labels:
+        app: ms-patient-pod
+    spec:
+      containers:
+        - name: ms-patient-container
+          image: 192.168.3.1:5000/ms-patient-image
+          ports:
+            - containerPort: 8081
+          env:
+           - name: eureka.client.serviceUrl.defaultZone
+             value:  http://registry-srv:8888/eureka  
+           - name: spring.application.instance_id
+             valueFrom:
+                fieldRef:
+                  fieldPath: metadata.name
+           - name: eureka.instance.preferIpAddress
+             value: "false"  
+           - name: eureka.instance.hostname
+             value: ms-patient 
+               
+          imagePullPolicy: Always     
+          
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: ms-patient
+spec:
+  selector:
+    app: ms-patient-pod
+  ports:
+    - port: 8081
+      targetPort: 8081
+      nodePort: 30009
+  type: NodePort       
+      
+  

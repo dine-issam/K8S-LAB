@@ -1,0 +1,3 @@
+FROM openjdk:23-jdk
+COPY target/ms-patient*.jar ms-patient.jar
+CMD java -jar /ms-patient.jar
